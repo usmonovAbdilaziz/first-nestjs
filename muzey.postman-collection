@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "2cb8f274-30bd-4b75-9bea-b4cbb0b9e391",
+		"name": "muzey",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "34739814"
+	},
+	"item": [
+		{
+			"name": "building",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category_id\":2,\r\n    \"name\":\"Qushimcha\",\r\n    \"floors\":20,\r\n    \"rooms\":15,\r\n    \"showcase\":20,\r\n    \"polka\":15 \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/building"
+					},
+					"response": []
+				},
+				{
+					"name": "all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/api/v1/building"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rooms\": 13\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/building/3"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:3000/api/v1/building/3"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"San'at\",\r\n    \"categoryNumber\":\"I\",\r\n    \"statusType\":\"Yaroqli\",\r\n    \"description\":\"unikal design ga ega \"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/category"
+					},
+					"response": []
+				},
+				{
+					"name": "all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/api/v1/category"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryNumber\": \"III\",\r\n    \"infoName\":\"Abdilaziz\",\r\n    \"description\":\"yangilandi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/category/1"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:3000/api/v1/category/2"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "item Objects",
+			"item": [
+				{
+					"name": "all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/api/v1/item-objects"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:3000/api/v1/item-objects/4"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"material\": \"Bronza\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/item-objects/5"
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"category_id\": 2,\r\n  \"name\": \"Buxoro dinari\",\r\n  \"fondType\": \"Yordamchi\",\r\n  \"material\": \"tilla\",\r\n  \"period\": 1880,\r\n  \"price\": \"50000\",\r\n  \"status\": \"Qoniqarsiz\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/item-objects"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sub category",
+			"item": [
+				{
+					"name": "create",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category_id\":2,\r\n    \"status\":[{\"key\":\"tosh\"},{\"key\":\"Tanga\"}]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/sub-category"
+					},
+					"response": []
+				},
+				{
+					"name": "all",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category_id\": 1,\r\n    \"status\": [{\"key\":\"Tanga\"},{\"key\": \"tosh\"}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/sub-category"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":[{\"key\":\"document\"}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/sub-category/1"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:3000/api/v1/sub-category/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "info",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

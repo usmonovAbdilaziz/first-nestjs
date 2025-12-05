@@ -1,0 +1,44 @@
+import { Category } from "../../category/entities/category.entity";
+import { FondType, ItemStatus } from "../../Roles/roles";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+
+@Entity('item-objects')
+export class ItemObject {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ type: 'integer' })
+  category_id: number;
+
+  @Column({ type: 'varchar' })
+  name: string;
+
+  @Column({ type: 'integer' })
+  period: number;
+
+  @Column({ type: 'varchar' })
+  price: string;
+
+  @Column({ type: 'varchar' })
+  material: string;
+
+  @Column({ type: 'enum', enum: ItemStatus })
+  status: ItemStatus;
+
+  @Column({ type: 'enum', enum: FondType })
+  fondType: FondType;
+
+  @ManyToOne(() => Category, (category) => category.objs, {
+    onDelete: 'CASCADE',
+    onUpdate:'CASCADE', // Category o‘chsa ItemObjectlar ham o‘chadi
+    nullable: true,
+  })
+  @JoinColumn({name:'category_id'})
+  category: Category;
+
+  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
+}
