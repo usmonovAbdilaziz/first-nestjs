@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"category_id\":2,\r\n    \"name\":\"Qushimcha\",\r\n    \"floors\":20,\r\n    \"rooms\":15,\r\n    \"showcase\":20,\r\n    \"polka\":15 \r\n}",
+							"raw": "{\r\n    \"category_id\":2,\r\n    \"name\":\"Asosiy\",\r\n    \"floors\":20,\r\n    \"rooms\":15,\r\n    \"showcase\":20,\r\n    \"polkas\":15 \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -43,31 +43,41 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"rooms\": 13\r\n}",
+							"raw": "{\r\n    \"room\": 1,\r\n    \"floor\":2,\r\n    \"showcas\":4,\r\n    \"polka\":16,\r\n    \"name\":\"Asosiy\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:3000/api/v1/building/3"
+						"url": "localhost:3000/api/v1/building/2"
 					},
 					"response": []
 				},
 				{
 					"name": "delete",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
-						"url": "localhost:3000/api/v1/building/3"
+						"url": "localhost:3000/api/v1/building"
 					},
 					"response": []
 				},
 				{
 					"name": "update all",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"floors\":25,\r\n    \"rooms\":24\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/building/builds/3"
 					},
 					"response": []
 				}
@@ -83,7 +93,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"San'at\",\r\n    \"categoryNumber\":\"I\",\r\n    \"statusType\":\"Yaroqli\",\r\n    \"description\":\"unikal design ga ega \"\r\n}",
+							"raw": "{\r\n    \"name\":\"Numizmatika\",\r\n    \"categoryNumber\":\"II\",\r\n    \"statusType\":\"Yaroqli\",\r\n    \"description\":\"unikal design ga ega \"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -117,7 +127,7 @@
 								}
 							}
 						},
-						"url": "localhost:3000/api/v1/category/1"
+						"url": "localhost:3000/api/v1/category/2"
 					},
 					"response": []
 				},
@@ -196,11 +206,8 @@
 			"item": [
 				{
 					"name": "create",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -217,8 +224,11 @@
 				},
 				{
 					"name": "all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",

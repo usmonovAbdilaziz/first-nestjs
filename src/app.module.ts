@@ -26,6 +26,7 @@ import { InfoModule } from './info/info.module';
       autoLoadEntities:true,
       synchronize:true
     }),
+    
     BuildingModule,
     ItemObjectsModule,
     CategoryModule,
