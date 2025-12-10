@@ -20,10 +20,10 @@ export class BuildingService {
   ) {}
   async create(createBuildingDto: CreateBuildingDto) {
     try {
-      const { name, category_id } = createBuildingDto;
+      const { name, category_id,floors,rooms,showcase,polka } = createBuildingDto;
       const category = await this.categoryServise.findOne(category_id);
       if (!category) throw new NotFoundException('Category not found');
-      const exists = await this.buildRepo.findOne({ where: { name } });
+      const exists = await this.buildRepo.findOne({ where: { name,floors,rooms,showcase,polka } });
       if (exists) {
         throw new ConflictException('This building already exists');
       }
