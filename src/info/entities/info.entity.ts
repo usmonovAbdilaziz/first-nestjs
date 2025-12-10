@@ -23,11 +23,16 @@ export class Info {
   @Column({ type: 'varchar' })
   description: string;
 
+  @Column({type:'jsonb',default:[]})
+  home:{data:object}[]
+
   @ManyToOne(() => Category, (category) => category.info, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE', // Category o‘chsa ItemObjectlar ham o‘chadi
     nullable: true,
   })
+
+
   @JoinColumn({ name: 'category_id' })
   category: Category;
 

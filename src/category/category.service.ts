@@ -75,18 +75,26 @@ export class CategoryService {
         );
       }
 
-      const category = await this.categoryRepo.findOne({ where: { id } });
+      const category = await this.categoryRepo.findOne({
+        where: { id },
+        relations: ['objs', 'subcategories', 'bulds'],
+      });
       if (!category) throw new NotFoundException('Category not found');
-
+      const oldData={
+        objects:category.objs,
+        buildings:category.bulds,
+        category:category.subcategories
+      }
       // Move va status yangilash
       const newMove = category.moved + 1;
       const newStatus = CategoryStatus.Moved;
 
       // Info yaratish
       const info = await this.infoservice.create({
-        name:infoName,
+        name: infoName,
         description,
         category_id: id,
+        home: [{ data: oldData }],
       });
 
       // Historyga eski data qo‘shish

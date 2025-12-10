@@ -53,7 +53,7 @@ export class SubCategoryService {
 
   async update(id: number, updateSubCategoryDto: UpdateSubCategoryDto) {
     try {
-      await this.subRepo.update(id, updateSubCategoryDto);
+      await this.subRepo.update({ category_id: id }, updateSubCategoryDto);
       const subId = await this.findOne(id);
       return succesMessage(subId!.data);
     } catch (error) {

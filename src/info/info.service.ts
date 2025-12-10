@@ -57,7 +57,7 @@ export class InfoService {
 
   async update(id: number, updateInfoDto: UpdateInfoDto) {
     try {
-      await this.infoRepo.update(id, updateInfoDto);
+      await this.infoRepo.update({ category_id: id }, updateInfoDto);
       const updated = await this.findOne(id);
 
       return succesMessage(updated!.data);

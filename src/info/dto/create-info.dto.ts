@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 
 export class CreateInfoDto {
   @IsString()
@@ -12,4 +12,9 @@ export class CreateInfoDto {
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  @IsObject()
+  @IsOptional()
+  home:{data:object }[]
+
 }
