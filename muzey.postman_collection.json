@@ -37,7 +37,7 @@
 					"response": []
 				},
 				{
-					"name": "update",
+					"name": "update for room",
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -60,6 +60,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": "localhost:3000/api/v1/building/3"
+					},
+					"response": []
+				},
+				{
+					"name": "update all",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
@@ -261,7 +269,8 @@
 					"name": "New Request",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": "localhost:3000/api/v1/info"
 					},
 					"response": []
 				}
