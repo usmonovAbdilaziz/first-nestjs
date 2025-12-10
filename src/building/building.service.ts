@@ -20,10 +20,13 @@ export class BuildingService {
   ) {}
   async create(createBuildingDto: CreateBuildingDto) {
     try {
-      const { name, category_id,floors,rooms,showcase,polka } = createBuildingDto;
+      const { name, category_id, floors, rooms, showcase, polka } =
+        createBuildingDto;
       const category = await this.categoryServise.findOne(category_id);
       if (!category) throw new NotFoundException('Category not found');
-      const exists = await this.buildRepo.findOne({ where: { name,floors,rooms,showcase,polka } });
+      const exists = await this.buildRepo.findOne({
+        where: { name, floors, rooms, showcase, polka },
+      });
       if (exists) {
         throw new ConflictException('This building already exists');
       }
@@ -58,12 +61,42 @@ export class BuildingService {
       handleError(error);
     }
   }
-
+  async updateBuildins(id: number, updateBuildingDto: UpdateBuildingDto) {
+    try {
+      
+      await this.buildRepo.update(id, updateBuildingDto);
+      const newBuild = await this.buildRepo.findOne({ where: { id } });
+      if(!newBuild){
+        throw new NotFoundException('Buildings not found')
+      }
+      return succesMessage(newBuild)
+    } catch (error) {
+      handleError(error);
+    }
+  }
   async update(id: number, updateBuildingDto: UpdateBuildingDto) {
     try {
+      const { polka, floor, room, showcas, category_id,rooms,floors,polkas,showcase } = updateBuildingDto;
+      if(rooms||polkas||floors||showcase){
+        throw new ConflictException('Default data cannot be changed.');
+      }
+      const { data } = (await this.findOne(id)) as any;
+      if (
+        floor! > data.floors! ||
+        room! > data.rooms! ||
+        showcas! > data.showcase! ||
+        polka! > data.polkas!
+      ) {
+        throw new NotFoundException(
+          'The data sent must not be larger than the previous data.',
+        );
+      }
       await this.buildRepo.update({ category_id: id }, updateBuildingDto);
-      const newBilding = await this.findOne(id);
-      return succesMessage(newBilding!.data);
+      if (category_id) {
+        const newBuild = await this.findOne(id);
+        return succesMessage(newBuild!.data);
+      }
+      return succesMessage(data);
     } catch (error) {
       handleError(error);
     }

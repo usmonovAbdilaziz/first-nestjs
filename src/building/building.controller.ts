@@ -23,8 +23,18 @@ export class BuildingController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBuildingDto: UpdateBuildingDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateBuildingDto: UpdateBuildingDto,
+  ) {
     return this.buildingService.update(+id, updateBuildingDto);
+  }
+  @Patch('builds/:id')
+  updateBuildins(
+    @Param('id') id: string,
+    @Body() updateBuildingDto: UpdateBuildingDto,
+  ) {
+    return this.buildingService.updateBuildins(+id, updateBuildingDto);
   }
 
   @Delete(':id')

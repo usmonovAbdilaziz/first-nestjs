@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { BuildingName } from "../../Roles/roles";
 
 export class CreateBuildingDto {
@@ -8,7 +8,7 @@ export class CreateBuildingDto {
 
   @IsNumber()
   @IsNotEmpty()
-  category_id:number
+  category_id: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -24,5 +24,21 @@ export class CreateBuildingDto {
 
   @IsNumber()
   @IsNotEmpty()
-  polka: number;
+  polkas: number;
+
+  @IsNumber()
+  @IsOptional()
+  floor?: number;
+
+  @IsNumber()
+  @IsOptional()
+  room?: number;
+
+  @IsNumber()
+  @IsOptional()
+  showcas?: number;
+
+  @IsNumber()
+  @IsOptional()
+  polka?: number;
 }
