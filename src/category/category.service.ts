@@ -42,7 +42,8 @@ export class CategoryService {
   async findAll() {
     try {
       const categories = await this.categoryRepo.find({
-        relations: ['objs', 'subcategories', 'bulds'],
+        relations: ['objs', 'subcategories', 'locations'],
+        order: { name: 'ASC' },
       });
       return succesMessage(categories);
     } catch (error) {
@@ -54,7 +55,7 @@ export class CategoryService {
     try {
       const exists = await this.categoryRepo.findOne({
         where: { id },
-        relations: ['objs', 'subcategories', 'bulds'],
+        relations: ['objs', 'subcategories', 'locations'], order: { name: 'ASC' }
       });
       if (!exists) {
         throw new NotFoundException('Category not found');
@@ -77,14 +78,15 @@ export class CategoryService {
 
       const category = await this.categoryRepo.findOne({
         where: { id },
-        relations: ['objs', 'subcategories', 'bulds'],
+        relations: ['objs', 'subcategories', 'locations'],
+        order: { name: 'ASC' },
       });
       if (!category) throw new NotFoundException('Category not found');
-      const oldData={
-        objects:category.objs,
-        buildings:category.bulds,
-        category:category.subcategories
-      }
+      const oldData = {
+        objects: category.objs,
+        locations: category.locations,
+        category: category.subcategories,
+      };
       // Move va status yangilash
       const newMove = category.moved + 1;
       const newStatus = CategoryStatus.Moved;
@@ -102,7 +104,8 @@ export class CategoryService {
         moved: category.moved,
         status: category.status,
         updatedAt: category.updatedAt,
-        };
+        
+      };
 
       // Category yangilash va history ga eski data qo‘shish
       category.moved = newMove;

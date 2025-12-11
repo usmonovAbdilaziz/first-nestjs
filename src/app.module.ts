@@ -7,6 +7,7 @@ import { ItemObjectsModule } from './item-objects/item-objects.module';
 import { CategoryModule } from './category/category.module';
 import { SubCategoryModule } from './sub-category/sub-category.module';
 import { InfoModule } from './info/info.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { InfoModule } from './info/info.module';
     CategoryModule,
     SubCategoryModule,
     InfoModule,
+    LocationModule,
     //redis config
 //  RedisModule.forRoot({
 //   type: 'single',

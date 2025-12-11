@@ -34,7 +34,9 @@ export class SubCategoryService {
 
   async findAll() {
     try {
-      const subs = await this.subRepo.find({ relations: ['category'] });
+      const subs = await this.subRepo.find({
+        relations: ['category'],
+      });
       return succesMessage(subs);
     } catch (error) {
       handleError(error);

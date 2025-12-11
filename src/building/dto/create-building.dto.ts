@@ -8,10 +8,6 @@ export class CreateBuildingDto {
 
   @IsNumber()
   @IsNotEmpty()
-  category_id: number;
-
-  @IsNumber()
-  @IsNotEmpty()
   floors: number;
 
   @IsNumber()
@@ -24,25 +20,13 @@ export class CreateBuildingDto {
 
   @IsNumber()
   @IsNotEmpty()
-  polkas: number;
-
-  @IsNumber()
-  @IsOptional()
-  floor?: number;
-
-  @IsNumber()
-  @IsOptional()
-  room?: number;
-
-  @IsNumber()
-  @IsOptional()
-  showcas?: number;
-
-  @IsNumber()
-  @IsOptional()
-  polka?: number;
+  polkas: number; 
 
   @IsString()
   @IsOptional()
   selectBuilding?: string;
+
+  @IsString()
+  @IsOptional()
+  oldBuilding?: string;
 }

@@ -7,8 +7,9 @@ import { Category } from 'src/category/entities/category.entity';
 import { CategoryModule } from 'src/category/category.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Building]),CategoryModule],
+  imports:[TypeOrmModule.forFeature([Building])],
   controllers: [BuildingController],
   providers: [BuildingService],
+  exports: [BuildingService],
 })
 export class BuildingModule {}

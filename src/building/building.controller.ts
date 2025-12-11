@@ -29,13 +29,6 @@ export class BuildingController {
   ) {
     return this.buildingService.update(+id, updateBuildingDto);
   }
-  @Patch('builds/:id')
-  updateBuildins(
-    @Param('id') id: string,
-    @Body() updateBuildingDto: UpdateBuildingDto,
-  ) {
-    return this.buildingService.updateBuildins(+id, updateBuildingDto);
-  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

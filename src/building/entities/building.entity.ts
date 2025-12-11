@@ -1,11 +1,9 @@
-import { Category } from 'src/category/entities/category.entity';
+import { Location } from 'src/location/entities/location.entity';
 import { BuildingName } from '../../Roles/roles';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -20,17 +18,6 @@ export class Building {
   name: BuildingName;
 
   @Column({ type: 'integer' })
-  category_id: number;
-
-  @ManyToOne(() => Category, (category) => category.bulds, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE', // Category o‘chsa ItemObjectlar ham o‘chadi
-    nullable: true,
-  })
-  @JoinColumn({ name: 'category_id' })
-  category: Category;
-
-  @Column({ type: 'integer' })
   floors: number;
 
   @Column({ type: 'integer' })
@@ -42,20 +29,11 @@ export class Building {
   @Column({ type: 'integer' })
   polkas: number;
 
-  @Column({ type: 'integer', nullable: true })
-  floor?: number;
-
-  @Column({ type: 'integer', nullable: true })
-  room?: number;
-
-  @Column({ type: 'integer', nullable: true })
-  showcas?: number;
-
-  @Column({ type: 'integer', nullable: true })
-  polka?: number;
-
   @Column({ type: 'varchar', nullable: true })
-  selectBuilding?: string;
+  oldBuilding?: string;
+
+  @OneToMany(() => Location, (location) => location.building)
+  locations: Location[];
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

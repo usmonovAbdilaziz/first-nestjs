@@ -33,6 +33,7 @@ export class InfoService {
     try {
       const infos = await this.infoRepo.find({
         relations: ['category'],
+        order: { name: 'ASC' },
       });
       return succesMessage(infos);
     } catch (error) {

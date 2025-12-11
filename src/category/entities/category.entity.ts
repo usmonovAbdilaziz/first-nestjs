@@ -1,16 +1,14 @@
 import { Building } from 'src/building/entities/building.entity';
 import { Info } from '../../info/entities/info.entity';
 import { ItemObject } from '../../item-objects/entities/item-object.entity';
-import {
-  CategoryNumber,
-  CategoryStatus,
-  StatusType,
-} from '../../Roles/roles';
+import { Location } from '../../location/entities/location.entity';
+import { CategoryNumber, CategoryStatus, StatusType } from '../../Roles/roles';
 import { SubCategory } from '../../sub-category/entities/sub-category.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -42,8 +40,8 @@ export class Category {
   @OneToMany(() => ItemObject, (item) => item.category)
   objs: ItemObject[];
 
-  @OneToMany(() => Building, (build) => build.category)
-  bulds: Building[];
+  @OneToMany(() => Location, (cate) => cate.category)
+  locations: Location[];
 
   @OneToMany(() => SubCategory, (sub) => sub.category)
   subcategories: SubCategory[];

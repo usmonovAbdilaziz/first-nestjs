@@ -35,7 +35,7 @@ export class ItemObjectsService {
 
   async findAll() {
     try {
-      const items = await this.itemObjRepo.find({ relations: ['category'] });
+      const items = await this.itemObjRepo.find({ relations: ['category'],order: { name: 'ASC' } });
       return succesMessage(items)
     } catch (error) {
       handleError(error);

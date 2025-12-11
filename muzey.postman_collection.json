@@ -16,22 +16,13 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"category_id\":2,\r\n    \"name\":\"Asosiy\",\r\n    \"floors\":20,\r\n    \"rooms\":15,\r\n    \"showcase\":20,\r\n    \"polkas\":15 \r\n}",
+							"raw": "{\r\n    \"name\":\"Arxiv\",\r\n    \"floors\":15,\r\n    \"rooms\":20,\r\n    \"showcase\":20,\r\n    \"polkas\":14 \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:3000/api/v1/building"
-					},
-					"response": []
-				},
-				{
-					"name": "all",
-					"request": {
-						"method": "GET",
-						"header": [],
 						"url": "localhost:3000/api/v1/building"
 					},
 					"response": []
@@ -43,41 +34,39 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"room\": 1,\r\n    \"floor\":2,\r\n    \"showcas\":4,\r\n    \"polka\":16,\r\n    \"name\":\"Asosiy\"\r\n}",
+							"raw": "{\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:3000/api/v1/building/2"
+						"url": "localhost:3000/api/v1/building/9"
+					},
+					"response": []
+				},
+				{
+					"name": "all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"room\": 1,\r\n    \"floor\":2,\r\n    \"showcas\":4,\r\n    \"polka\":16,\r\n    \"name\":\"Asosiy\"\r\n}"
+						},
+						"url": "localhost:3000/api/v1/building"
 					},
 					"response": []
 				},
 				{
 					"name": "delete",
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
-						"url": "localhost:3000/api/v1/building"
-					},
-					"response": []
-				},
-				{
-					"name": "update all",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"floors\":25,\r\n    \"rooms\":24\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:3000/api/v1/building/builds/3"
+						"url": "localhost:3000/api/v1/building/6"
 					},
 					"response": []
 				}
@@ -93,7 +82,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Numizmatika\",\r\n    \"categoryNumber\":\"II\",\r\n    \"statusType\":\"Yaroqli\",\r\n    \"description\":\"unikal design ga ega \"\r\n}",
+							"raw": "{\r\n    \"name\":\"San'at\",// Arxealogiya, San'at, Etnogirafiya, Hujjatlar, Tabiiy, Numizmatika\"\r\n    \"categoryNumber\":\"VI\",\r\n    \"statusType\":\"Yaroqli\",\r\n    \"description\":\"unikal design ga ega \"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -281,6 +270,65 @@
 						"method": "GET",
 						"header": [],
 						"url": "localhost:3000/api/v1/info"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "location",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category_id\":2,\r\n    \"building_id\":1,\r\n    \"floor\":14,\r\n    \"room\":20,\r\n    \"showcase\":20,\r\n    \"polka\":12\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/location"
+					},
+					"response": []
+				},
+				{
+					"name": "all location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/api/v1/location"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:3000/api/v1/location/10"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"floor\": 14,\r\n    \"room\": 20,\r\n    \"showcase\": 20,\r\n    \"polka\": 12,\r\n    \"building_id\": 2,\r\n    \"category_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/location/10"
 					},
 					"response": []
 				}

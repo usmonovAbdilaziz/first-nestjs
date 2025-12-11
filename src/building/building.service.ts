@@ -17,16 +17,13 @@ export class BuildingService {
   constructor(
     @InjectRepository(Building)
     private readonly buildRepo: Repository<Building>,
-    private readonly categoryServise: CategoryService,
   ) {}
   async create(createBuildingDto: CreateBuildingDto) {
     try {
-      const { name, category_id, floors, rooms, showcase, polka } =
-        createBuildingDto;
-      const category = await this.categoryServise.findOne(category_id);
-      if (!category) throw new NotFoundException('Category not found');
+      const { name, floors, rooms, showcase, polkas } = createBuildingDto;
+
       const exists = await this.buildRepo.findOne({
-        where: { name, floors, rooms, showcase, polka },
+        where: { name, floors, rooms, showcase, polkas },
       });
       if (exists) {
         throw new ConflictException('This building already exists');
@@ -41,7 +38,10 @@ export class BuildingService {
 
   async findAll() {
     try {
-      const buildings = await this.buildRepo.find({ relations: ['category'] });
+      const buildings = await this.buildRepo.find({
+        relations: ['locations'],
+        order: { name: 'ASC' },
+      });
       return succesMessage(buildings);
     } catch (error) {
       handleError(error);
@@ -51,8 +51,8 @@ export class BuildingService {
   async findOne(id: number) {
     try {
       const exists = await this.buildRepo.findOne({
-        where: {  id },
-        relations: ['category'],
+        where: { id },
+        relations: ['locations'],
       });
       if (!exists) {
         throw new NotFoundException('This building not found');
@@ -62,7 +62,7 @@ export class BuildingService {
       handleError(error);
     }
   }
-  async updateBuildins(id: number, updateBuildingDto: UpdateBuildingDto) {
+  async update(id: number, updateBuildingDto: UpdateBuildingDto) {
     try {
       await this.buildRepo.update(id, updateBuildingDto);
       const newBuild = await this.buildRepo.findOne({ where: { id } });
@@ -74,46 +74,7 @@ export class BuildingService {
       handleError(error);
     }
   }
-  async update(id: number, updateBuildingDto: UpdateBuildingDto) {
-    try {
-      const {
-        polka,
-        floor,
-        room,
-        showcas,
-        category_id,
-        rooms,
-        floors,
-        polkas,
-        showcase,
-        name,
-      } = updateBuildingDto;
-      if (rooms || polkas || floors || showcase || name) {
-        throw new ConflictException('Default data cannot be changed.');
-      }
-      const category = await this.categoryServise.findOne(category_id!);
-      if (!category) {
-        throw new NotFoundException('Category not found');
-      }
-      const { data } = (await this.findOne(id)) as any;
-      if (
-        floor! > data.floors! ||
-        room! > data.rooms! ||
-        showcas! > data.showcase! ||
-        polka! > data.polkas!
-      ) {
-        throw new NotFoundException(
-          'The data sent must not be larger than the previous data.',
-        );
-      }
-      await this.buildRepo.update(id, updateBuildingDto);
-      const newBuild = await this.findOne(id)
-      return succesMessage(newBuild!.data);
-    } catch (error) {
-      handleError(error);
-    }
-  }
-
+  
   async remove(id: number) {
     try {
       await this.findOne(id);
