@@ -41,7 +41,7 @@ export class LocationService {
         throw new NotFoundException('Building not found');
       }
       const existsBuild: any = await this.locationRepository.findOne({
-        where: { building_id, category_id, floor, room, showcase, polka },
+        where: { building_id, floor, room, showcase, polka },
       });
       if (existsBuild) {
         throw new ConflictException('Location already exists');
@@ -124,7 +124,7 @@ export class LocationService {
       } = updateLocationDto;
       if (!infoName || !description || !reasonForTransfer) {
         throw new ConflictException(
-          'infoName va description ikkalasi ham bo‘lishi shart',
+          'infoName, description va reasonForTransfer hammasi bulishi shart',
         );
       }
       if (category_id) {
@@ -156,10 +156,7 @@ export class LocationService {
       const building = await this.buildingService.findOne(
         existsBuild.building_id,
       );
-      const oldData = {
-        data,
-        building,
-      };
+     
       const newMove = data.moved + 1;
       const newStatus = CategoryStatus.Moved;
       const info = await this.infoservice.create({
@@ -167,7 +164,7 @@ export class LocationService {
         reasonForTransfer,
         name: infoName,
         description,
-        home: [{ data: oldData }],
+        home: [],
       });
 
       const historyItem = {
@@ -217,7 +214,7 @@ export class LocationService {
         throw new NotFoundException('Location not found after update');
       }
 
-      return succesMessage({ updatedLocation, info });
+      return succesMessage({ updatedLocation, info:info!.data });
     } catch (error) {
       handleError(error);
     }
