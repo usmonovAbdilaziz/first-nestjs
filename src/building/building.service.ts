@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateBuildingDto } from './dto/create-building.dto';
 import { UpdateBuildingDto } from './dto/update-building.dto';
@@ -50,7 +51,7 @@ export class BuildingService {
   async findOne(id: number) {
     try {
       const exists = await this.buildRepo.findOne({
-        where: { category_id: id },
+        where: {  id },
         relations: ['category'],
       });
       if (!exists) {
@@ -63,22 +64,36 @@ export class BuildingService {
   }
   async updateBuildins(id: number, updateBuildingDto: UpdateBuildingDto) {
     try {
-      
       await this.buildRepo.update(id, updateBuildingDto);
       const newBuild = await this.buildRepo.findOne({ where: { id } });
-      if(!newBuild){
-        throw new NotFoundException('Buildings not found')
+      if (!newBuild) {
+        throw new NotFoundException('Buildings not found');
       }
-      return succesMessage(newBuild)
+      return succesMessage(newBuild);
     } catch (error) {
       handleError(error);
     }
   }
   async update(id: number, updateBuildingDto: UpdateBuildingDto) {
     try {
-      const { polka, floor, room, showcas, category_id,rooms,floors,polkas,showcase } = updateBuildingDto;
-      if(rooms||polkas||floors||showcase){
+      const {
+        polka,
+        floor,
+        room,
+        showcas,
+        category_id,
+        rooms,
+        floors,
+        polkas,
+        showcase,
+        name,
+      } = updateBuildingDto;
+      if (rooms || polkas || floors || showcase || name) {
         throw new ConflictException('Default data cannot be changed.');
+      }
+      const category = await this.categoryServise.findOne(category_id!);
+      if (!category) {
+        throw new NotFoundException('Category not found');
       }
       const { data } = (await this.findOne(id)) as any;
       if (
@@ -91,12 +106,9 @@ export class BuildingService {
           'The data sent must not be larger than the previous data.',
         );
       }
-      await this.buildRepo.update({ category_id: id }, updateBuildingDto);
-      if (category_id) {
-        const newBuild = await this.findOne(id);
-        return succesMessage(newBuild!.data);
-      }
-      return succesMessage(data);
+      await this.buildRepo.update(id, updateBuildingDto);
+      const newBuild = await this.findOne(id)
+      return succesMessage(newBuild!.data);
     } catch (error) {
       handleError(error);
     }

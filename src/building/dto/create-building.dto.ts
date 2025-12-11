@@ -42,11 +42,7 @@ export class CreateBuildingDto {
   @IsOptional()
   polka?: number;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  latitude?: number;
-
-  @IsNumber()
-  @IsOptional()
-  longitude?: number;
+  selectBuilding?: string;
 }

@@ -1,6 +1,15 @@
 import { Category } from 'src/category/entities/category.entity';
 import { BuildingName } from '../../Roles/roles';
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('building')
 export class Building {
@@ -45,11 +54,8 @@ export class Building {
   @Column({ type: 'integer', nullable: true })
   polka?: number;
 
-  @Column({ type: 'double precision', nullable: true })
-  latitude?: number;
-
-  @Column({ type: 'double precision', nullable: true })
-  longitude?: number;
+  @Column({ type: 'varchar', nullable: true })
+  selectBuilding?: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
