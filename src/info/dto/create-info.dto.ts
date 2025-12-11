@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { Reason } from 'src/Roles/roles';
 
 export class CreateInfoDto {
   @IsString()
@@ -15,6 +23,9 @@ export class CreateInfoDto {
 
   @IsObject()
   @IsOptional()
-  home:{data:object }[]
+  home: { data: object }[];
 
+  @IsEnum(Reason)
+  @IsNotEmpty()
+  reasonForTransfer: Reason;
 }

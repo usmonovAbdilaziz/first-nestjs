@@ -43,3 +43,13 @@ export enum StatusType {
   Unsuitable = 'Yaroqsiz',
   Unused='Foydalanilmasin'
 }
+
+export enum Reason {
+  EXPO_CHANGE = "Ekspozitsiya o'zgarishi",
+  RENOVATION = 'Remont ishlari',
+  RESTORATION = 'Restavratsiyaga yuborish',
+  SAFETY = 'Xavfsizlik sababli',
+  TOUR_EXHIBITION = "Sayyor ko'rgazma",
+  STORAGE = 'Saqlovga joylash',
+  OTHER = 'Boshqa',
+}

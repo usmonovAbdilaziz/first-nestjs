@@ -24,9 +24,5 @@ export class CreateBuildingDto {
 
   @IsString()
   @IsOptional()
-  selectBuilding?: string;
-
-  @IsString()
-  @IsOptional()
   oldBuilding?: string;
 }

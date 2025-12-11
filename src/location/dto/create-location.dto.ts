@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Reason } from 'src/Roles/roles';
 
 export class CreateLocationDto {
   @IsNumber()
@@ -24,4 +25,16 @@ export class CreateLocationDto {
   @IsNumber()
   @IsNotEmpty()
   polka: number;
+//for info
+  @IsString()
+  @IsOptional()
+  infoName?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsEnum(Reason)
+  @IsOptional()
+  reasonForTransfer?:Reason
 }

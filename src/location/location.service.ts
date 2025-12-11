@@ -1,5 +1,7 @@
 import {
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,6 +13,8 @@ import { Repository } from 'typeorm';
 import { CategoryService } from 'src/category/category.service';
 import { BuildingService } from 'src/building/building.service';
 import { handleError, succesMessage } from 'src/utils/response';
+import { CategoryStatus } from 'src/Roles/roles';
+import { InfoService } from 'src/info/info.service';
 
 @Injectable()
 export class LocationService {
@@ -19,6 +23,7 @@ export class LocationService {
     private locationRepository: Repository<Location>,
     private readonly buildingService: BuildingService,
     private readonly categoryService: CategoryService,
+    @Inject(forwardRef(() => InfoService)) private infoservice: InfoService,
   ) {}
 
   async create(createLocationDto: CreateLocationDto) {
@@ -36,14 +41,13 @@ export class LocationService {
         throw new NotFoundException('Building not found');
       }
       const existsBuild: any = await this.locationRepository.findOne({
-        where: { building_id,category_id, floor, room, showcase, polka },
+        where: { building_id, category_id, floor, room, showcase, polka },
       });
-      if(existsBuild){
+      if (existsBuild) {
         throw new ConflictException('Location already exists');
       }
-   
-      
-        const data = buildingExists.data as any;
+
+      const data = buildingExists.data as any;
 
       const limits = [
         { field: 'floor', value: floor, max: data.floors },
@@ -107,30 +111,85 @@ export class LocationService {
 
   async update(id: number, updateLocationDto: UpdateLocationDto) {
     try {
-      const { category_id, building_id, floor, room, showcase, polka } = updateLocationDto;
-      if(category_id){
+      const {
+        category_id,
+        building_id,
+        floor,
+        room,
+        showcase,
+        polka,
+        infoName,
+        description,
+        reasonForTransfer,
+      } = updateLocationDto;
+      if (!infoName || !description || !reasonForTransfer) {
+        throw new ConflictException(
+          'infoName va description ikkalasi ham bo‘lishi shart',
+        );
+      }
+      if (category_id) {
         const exists = await this.categoryService.findOne(category_id);
         if (!exists) throw new NotFoundException('Category not found');
       }
-      if(building_id){
+      if (building_id) {
         const buildingExists = await this.buildingService.findOne(building_id);
         if (!buildingExists) {
           throw new NotFoundException('Building not found');
         }
       }
-    
+
       const existsBuild: any = await this.locationRepository.findOne({
         where: { id },
       });
-      if(floor===existsBuild.floor && room===existsBuild.room && showcase===existsBuild.showcase && polka===existsBuild.polka){
+      if (
+        floor === existsBuild.floor &&
+        room === existsBuild.room &&
+        showcase === existsBuild.showcase &&
+        polka === existsBuild.polka
+      ) {
         throw new ConflictException('Location already exists');
       }
+      //for info create
+      const { data }: any = await this.categoryService.findOne(
+        existsBuild.category_id,
+      );
+      const building = await this.buildingService.findOne(
+        existsBuild.building_id,
+      );
+      const oldData = {
+        data,
+        building,
+      };
+      const newMove = data.moved + 1;
+      const newStatus = CategoryStatus.Moved;
+      const info = await this.infoservice.create({
+        category_id: existsBuild.category_id,
+        reasonForTransfer,
+        name: infoName,
+        description,
+        home: [{ data: oldData }],
+      });
+
+      const historyItem = {
+        moved: newMove,
+        status: newStatus,
+        updatedAt: data.updatedAt,
+        history: [existsBuild],
+      };
+      await this.categoryService.update(existsBuild.category_id, historyItem);
 
       // First check if location exists
       await this.findOne(id);
 
       // Transform DTO for update to match entity structure if needed
-      const updateData: any = { ...updateLocationDto };
+      const updateData: any = {
+        floor: updateLocationDto.floor,
+        room: updateLocationDto.room,
+        showcase: updateLocationDto.showcase,
+        polka: updateLocationDto.polka,
+        building_id: updateLocationDto.building_id,
+        category_id:updateLocationDto.category_id
+      };
 
       // Handle category_id -> category transformation
       if (updateData.category_id !== undefined) {
@@ -158,7 +217,7 @@ export class LocationService {
         throw new NotFoundException('Location not found after update');
       }
 
-      return succesMessage(updatedLocation);
+      return succesMessage({ updatedLocation, info });
     } catch (error) {
       handleError(error);
     }

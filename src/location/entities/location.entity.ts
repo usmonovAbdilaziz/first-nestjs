@@ -28,9 +28,9 @@ export class Location {
   @Column({ type: 'integer' })
   building_id: number;
 
+
   @Column({ type: 'integer' })
   category_id: number;
-  
 
   @ManyToOne(() => Category, (category) => category.locations, {
     onDelete: 'CASCADE',

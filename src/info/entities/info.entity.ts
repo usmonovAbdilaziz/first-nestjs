@@ -32,7 +32,6 @@ export class Info {
     nullable: true,
   })
 
-
   @JoinColumn({ name: 'category_id' })
   category: Category;
 

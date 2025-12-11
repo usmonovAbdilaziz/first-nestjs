@@ -6,7 +6,7 @@ import { Info } from './entities/info.entity';
 import { CategoryModule } from '../category/category.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Info]), forwardRef(() => CategoryModule)],
+  imports: [TypeOrmModule.forFeature([Info]),  CategoryModule],
   controllers: [InfoController],
   providers: [InfoService],
   exports: [InfoService],

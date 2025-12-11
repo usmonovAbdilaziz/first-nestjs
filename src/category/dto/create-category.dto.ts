@@ -21,12 +21,4 @@ export class CreateCategoryDto {
   @IsEnum(CategoryStatus)
   @IsOptional()
   status?: CategoryStatus;
-
-  @IsString()
-  @IsOptional()
-  infoName?: string;
-
-  @IsString()
-  @IsOptional()
-  description?: string;
 }

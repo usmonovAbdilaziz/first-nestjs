@@ -12,15 +12,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
 import { InfoService } from '../info/info.service';
-import { stat } from 'fs';
-import { CategoryStatus } from 'src/Roles/roles';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepo: Repository<Category>,
-    @Inject(forwardRef(() => InfoService)) private infoservice: InfoService,
   ) {}
   async create(createCategoryDto: CreateCategoryDto) {
     try {
@@ -68,53 +65,10 @@ export class CategoryService {
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     try {
-      const { infoName, description } = updateCategoryDto;
+     await this.categoryRepo.update(id,updateCategoryDto)
+     const category = await this.findOne(id)
 
-      if (!infoName || !description) {
-        throw new ConflictException(
-          'infoName va description ikkalasi ham bo‘lishi shart',
-        );
-      }
-
-      const category = await this.categoryRepo.findOne({
-        where: { id },
-        relations: ['objs', 'subcategories', 'locations'],
-        order: { name: 'ASC' },
-      });
-      if (!category) throw new NotFoundException('Category not found');
-      const oldData = {
-        objects: category.objs,
-        locations: category.locations,
-        category: category.subcategories,
-      };
-      // Move va status yangilash
-      const newMove = category.moved + 1;
-      const newStatus = CategoryStatus.Moved;
-
-      // Info yaratish
-      const info = await this.infoservice.create({
-        name: infoName,
-        description,
-        category_id: id,
-        home: [{ data: oldData }],
-      });
-
-      // Historyga eski data qo‘shish
-      const historyItem = {
-        moved: category.moved,
-        status: category.status,
-        updatedAt: category.updatedAt,
-        
-      };
-
-      // Category yangilash va history ga eski data qo‘shish
-      category.moved = newMove;
-      category.status = newStatus;
-      category.history = [...category.history, historyItem];
-
-      await this.categoryRepo.save(category);
-
-      return succesMessage({ category, info });
+      return succesMessage(category!.data);
     } catch (error) {
       handleError(error);
     }

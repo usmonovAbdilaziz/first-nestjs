@@ -37,12 +37,12 @@ export class Category {
   @Column({ type: 'enum', enum: CategoryStatus, default: CategoryStatus.New })
   status: CategoryStatus;
 
-  @OneToMany(() => ItemObject, (item) => item.category)
-  objs: ItemObject[];
-
   @OneToMany(() => Location, (cate) => cate.category)
   locations: Location[];
 
+  @OneToMany(()=>ItemObject,(item)=>item.category)
+  objs:ItemObject[]
+  
   @OneToMany(() => SubCategory, (sub) => sub.category)
   subcategories: SubCategory[];
 
