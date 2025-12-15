@@ -22,6 +22,8 @@ export class BuildingService {
     try {
       const { name, floors, rooms, showcase, polkas } = createBuildingDto;
 
+      const nameExist = await this.buildRepo.findOne({where:{name}})
+      if(nameExist)throw new ConflictException('This name with created Building')
       const exists = await this.buildRepo.findOne({
         where: { name, floors, rooms, showcase, polkas },
       });

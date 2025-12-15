@@ -156,7 +156,7 @@ export class LocationService {
       const building = await this.buildingService.findOne(
         existsBuild.building_id,
       );
-     
+
       const newMove = data.moved + 1;
       const newStatus = CategoryStatus.Moved;
       const info = await this.infoservice.create({
@@ -164,14 +164,14 @@ export class LocationService {
         reasonForTransfer,
         name: infoName,
         description,
-        home: [],
+        home: [existsBuild.data],
       });
 
       const historyItem = {
         moved: newMove,
         status: newStatus,
         updatedAt: data.updatedAt,
-        history: [existsBuild],
+        history: [building!.data],
       };
       await this.categoryService.update(existsBuild.category_id, historyItem);
 
@@ -185,7 +185,7 @@ export class LocationService {
         showcase: updateLocationDto.showcase,
         polka: updateLocationDto.polka,
         building_id: updateLocationDto.building_id,
-        category_id:updateLocationDto.category_id
+        category_id: updateLocationDto.category_id,
       };
 
       // Handle category_id -> category transformation
@@ -214,7 +214,7 @@ export class LocationService {
         throw new NotFoundException('Location not found after update');
       }
 
-      return succesMessage({ updatedLocation, info:info!.data });
+      return succesMessage({ updatedLocation, info: info!.data });
     } catch (error) {
       handleError(error);
     }
