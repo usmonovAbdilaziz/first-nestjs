@@ -1,6 +1,16 @@
-import { Category } from "../../category/entities/category.entity";
-import { FondType, ItemStatus } from "../../Roles/roles";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { SubCategory } from 'src/sub-category/entities/sub-category.entity';
+import { Category } from '../../category/entities/category.entity';
+import { FondType, ItemStatus } from '../../Roles/roles';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('item-objects')
 export class ItemObject {
@@ -30,11 +40,14 @@ export class ItemObject {
 
   @ManyToOne(() => Category, (category) => category.objs, {
     onDelete: 'CASCADE',
-    onUpdate:'CASCADE', // Category o‘chsa ItemObjectlar ham o‘chadi
+    onUpdate: 'CASCADE', // Category o‘chsa ItemObjectlar ham o‘chadi
     nullable: true,
   })
-  @JoinColumn({name:'category_id'})
+  @JoinColumn({ name: 'category_id' })
   category: Category;
+
+  @Column({ type: 'varchar',nullable:true })
+  subCategory: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

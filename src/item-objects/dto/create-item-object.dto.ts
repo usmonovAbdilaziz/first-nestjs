@@ -29,4 +29,12 @@ export class CreateItemObjectDto {
   @IsEnum(FondType)
   @IsNotEmpty()
   fondType: FondType;
+
+  @IsNumber()
+  @IsNotEmpty()
+  sub_category_id:number
+
+  @IsString()
+  @IsNotEmpty()
+  subCategory:string
 }

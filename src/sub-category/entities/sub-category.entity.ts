@@ -1,3 +1,4 @@
+import { ItemObject } from 'src/item-objects/entities/item-object.entity';
 import { Category } from '../../category/entities/category.entity';
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
