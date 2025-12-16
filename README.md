@@ -1,6 +1,56 @@
-# First NestJS Project
+# Museum Inventory Management System
 
-This is a NestJS backend application with a modular architecture and hierarchical domain model.
+This is a NestJS backend application for managing museum inventory with a modular architecture and hierarchical domain model. The system tracks objects across various categories, locations, and buildings within a museum.
+
+## Table of Contents
+
+- [Features](#features)
+- [Technologies](#technologies)
+- [Architecture](#architecture)
+- [Authentication System](#authentication-system)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [API Documentation](#api-documentation)
+- [Database Schema](#database-schema)
+- [Example Data](#example-data)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [License](#license)
+
+## Features
+
+1. **Complete CRUD Operations** - Full Create, Read, Update, Delete functionality for all entities
+2. **Hierarchical Data Management** - Organize items by Building → Category → SubCategory → ItemObject
+3. **Location Tracking** - Track items by floor, room, showcase, and shelf
+4. **JWT Authentication** - Secure token-based authentication with role-based access control
+5. **Data Validation** - Comprehensive input validation using class-validator
+6. **Database Seeding** - Automatic creation of super admin user on application startup
+7. **Docker Support** - Containerized deployment with PostgreSQL and Redis
+8. **RESTful API** - Well-structured REST API with consistent responses
+
+## Technologies
+
+- [NestJS](https://nestjs.com/) - Progressive Node.js framework
+- [TypeORM](https://typeorm.io/) - ORM (Object Relational Mapper)
+- [PostgreSQL](https://www.postgresql.org/) - Database
+- [Redis](https://redis.io/) - Cache and session storage (optional)
+- [Docker](https://www.docker.com/) - Containerization
+- [TypeScript](https://www.typescriptlang.org/) - Statically typed JavaScript
+- [JWT](https://jwt.io/) - JSON Web Tokens for authentication
+
+## Architecture
+
+The application follows a modular architecture with the following modules:
+
+1. **Building** - Information about museum buildings
+2. **Category** - Main categories for organizing items
+3. **SubCategory** - Subdivisions within categories
+4. **ItemObjects** - Actual inventory objects
+5. **Location** - Physical locations of items
+6. **Info** - Additional information about items
+7. **History** - Movement and change history of items
+8. **Auth** - Authentication and authorization
+9. **Admin** - Administrative functions and user management
 
 ## Authentication System
 
@@ -9,7 +59,7 @@ This application includes a complete JWT-based authentication system with role-b
 ### Features
 
 1. **JWT Authentication**: Secure token-based authentication
-2. **Role-Based Access Control**: Different permission levels (Admin, SuperAdmin, User)
+2. **Role-Based Access Control**: Different permission levels (Admin, SuperAdmin)
 3. **Route Protection**: Automatic protection of all routes with optional public access
 4. **Custom Guards**: Flexible authorization mechanisms
 
@@ -29,7 +79,7 @@ This application includes a complete JWT-based authentication system with role-b
 #### 3. Role-Based Access
 
 - Routes can be protected by specific roles using `@Roles()` decorator
-- Available roles: Admin, SuperAdmin, User
+- Available roles: Admin, SuperAdmin
 
 ### Available Decorators
 
@@ -61,14 +111,12 @@ create(@Body() createAdminDto: CreateAdminDto) {
 
 - **SuperAdmin**: Can create/delete admins, access all resources
 - **Admin**: Can manage most resources except other admins
-- **User**: Limited access to specific resources
 
 ### Environment Variables Required
 
 ```env
 JWT_ACCESS_SECRET=your_access_secret_key
 JWT_REFRESH_SECRET=your_refresh_secret_key
-JWT_SECRET=your_verification_secret_key
 JWT_ACCESS_TIME=15m
 JWT_REFRESH_TIME=7d
 ```
@@ -78,12 +126,7 @@ JWT_REFRESH_TIME=7d
 #### Authentication
 
 - `POST /auth/login` - User login (public)
-- `POST /auth/refresh` - Refresh token (public)
-- `POST /auth/logout` - Logout (authenticated)
-
-#### Profile
-
-- `GET /auth/profile` - Get user profile (authenticated)
+- `GET /auth/me` - Get authenticated user profile
 
 ### Adding Authentication to New Controllers
 
@@ -115,249 +158,409 @@ export class ItemsController {
 }
 ```
 
-# Muzey Inventarizatsiya Tizimi
+## Installation
 
-Bu loyiha muzey inventarizatsiyasini boshqarish uchun mo'ljallangan NestJS asosidagi backend ilovasidir. Loyiha turli xil kategoriyalarga ajratilgan ob'ektlarni kuzatib borish, ularning joylashuvini aniqlash va batafsil ma'lumotlarini saqlash imkonini beradi.
-
-## Texnologiyalar
-
-- [NestJS](https://nestjs.com/) - Progressiv Node.js framework
-- [TypeORM](https://typeorm.io/) - ORM (Object Relational Mapper)
-- [PostgreSQL](https://www.postgresql.org/) - Ma'lumotlar bazasi
-- [Redis](https://redis.io/) - Kesh va sessiya ma'lumotlari (ixtiyoriy)
-- [Docker](https://www.docker.com/) - Konteynerlashtirish
-- TypeScript - Statically typed JavaScript
-
-## Loyiha Arxitekturasi
-
-Loyiha quyidagi modullardan iborat:
-
-1. **Building (Bino)** - Binolar haqida ma'lumot
-2. **Category (Kategoriya)** - Asosiy kategoriyalar
-3. **SubCategory (Subkategoriya)** - Kategoriyalarning ichki bo'limlari
-4. **ItemObjects (Elementlar)** - Haqiqiy inventarizatsiya ob'ektlari
-5. **Location (Joylashuv)** - Ob'ektlarning joylashuvi
-6. **Info (Ma'lumot)** - Qo'shimcha ma'lumotlar
-
-## O'rnatish
-
-### Talablarni tekshirish
+### Prerequisites
 
 - Node.js (v18+)
 - PostgreSQL
-- Docker (ixtiyoriy)
+- Docker (optional)
 
-### O'rnatish qadamlari
+### Setup Steps
 
-1. Repozitoriyani klonlash:
+1. Clone the repository:
 
 ```bash
 git clone <repository-url>
 cd first-nestjs
 ```
 
-2. Bog'liqliklarni o'rnatish:
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. `.env` faylini yaratish:
+3. Create `.env` file:
 
 ```bash
 cp .env.example .env
 ```
 
-4. `.env` fayliga quyidagi ma'lumotlarni kiriting:
+4. Configure the `.env` file with your settings:
 
 ```env
+# Application configuration
 PORT=3000
+NODE_ENV=development
+
+# Database configuration
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=your_db_username
 DB_PASSWORD=your_db_password
 DB_NAME=your_db_name
-REDIS_HOST=localhost
-REDIS_PORT=6379
+
+# Super admin user (created automatically on first startup)
+SUPER_ADMIN_EMAIL=admin@example.com
+SUPER_ADMIN_PASS=secure_password
+SUPER_ADMIN_NAME=Super Administrator
+
+# JWT configuration
+JWT_ACCESS_SECRET=your_secure_access_secret
+JWT_REFRESH_SECRET=your_secure_refresh_secret
+JWT_ACCESS_TIME=1h
+JWT_REFRESH_TIME=7d
 ```
 
-5. Ma'lumotlar bazasini yaratish:
+5. Create database:
 
 ```bash
-# PostgreSQL-da yangi ma'lumotlar bazasini yarating
+# Create a new PostgreSQL database
 createdb your_db_name
 ```
 
-## Ishga tushirish
+## Running the Application
 
-### Rivojlanish rejimida (development)
+### Development Mode
 
 ```bash
 npm run start:dev
 ```
 
-### Ishlab chiqarish rejimida (production)
+### Production Mode
 
 ```bash
-# Build qilish
+# Build the application
 npm run build
 
-# Ishga tushirish
+# Run in production mode
 npm run start:prod
 ```
 
-### Docker orqali
+### Using Docker
 
 ```bash
-# Barcha konteynerlarni ishga tushirish
+# Start all services (application, PostgreSQL, Redis)
 docker-compose up -d
 ```
 
-## API Endpoints
+## API Documentation
 
-API v1 versiyasi `/api/v1` prefiksi orqali mavjud.
+All API endpoints are prefixed with `/api/v1`.
 
-### Building (Binolar)
+### Authentication Endpoints
 
-- `POST /api/v1/building` - Yangi bino yaratish
-- `GET /api/v1/building` - Barcha binolarni olish
-- `GET /api/v1/building/:id` - Bitta binoni olish
-- `PATCH /api/v1/building/:id` - Binoni yangilash
-- `DELETE /api/v1/building/:id` - Binoni o'chirish
+- `POST /api/v1/auth/login` - Authenticate user and receive JWT token
+- `GET /api/v1/auth/me` - Get authenticated user information
 
-### Category (Kategoriyalar)
+### Admin Endpoints
 
-- `POST /api/v1/category` - Yangi kategoriya yaratish
-- `GET /api/v1/category` - Barcha kategoriyalarni olish
-- `GET /api/v1/category/:id` - Bitta kategoriyani olish
-- `PATCH /api/v1/category/:id` - Kategoriyani yangilash
-- `DELETE /api/v1/category/:id` - Kategoriyani o'chirish
+- `POST /api/v1/admin` - Create new admin (SuperAdmin only)
+- `GET /api/v1/admin` - Get all admins
+- `GET /api/v1/admin/:id` - Get specific admin
+- `PATCH /api/v1/admin/:id` - Update admin
+- `DELETE /api/v1/admin/:id` - Delete admin (SuperAdmin only)
 
-### SubCategory (Subkategoriyalar)
+### Building Endpoints
 
-- `POST /api/v1/sub-category` - Yangi subkategoriya yaratish
-- `GET /api/v1/sub-category` - Barcha subkategoriyalarni olish
-- `GET /api/v1/sub-category/:id` - Bitta subkategoriyani olish
-- `PATCH /api/v1/sub-category/:id` - Subkategoriyani yangilash
-- `DELETE /api/v1/sub-category/:id` - Subkategoriyani o'chirish
+- `POST /api/v1/building` - Create new building
+- `GET /api/v1/building` - Get all buildings
+- `GET /api/v1/building/:id` - Get specific building
+- `PATCH /api/v1/building/:id` - Update building
+- `DELETE /api/v1/building/:id` - Delete building
 
-### ItemObjects (Inventar ob'ektlari)
+### Category Endpoints
 
-- `POST /api/v1/item-objects` - Yangi inventar ob'ektini yaratish
-- `GET /api/v1/item-objects` - Barcha inventar ob'ektlarini olish
-- `GET /api/v1/item-objects/:id` - Bitta inventar ob'ektini olish
-- `PATCH /api/v1/item-objects/:id` - Inventar ob'ektini yangilash
-- `DELETE /api/v1/item-objects/:id` - Inventar ob'ektini o'chirish
+- `POST /api/v1/category` - Create new category
+- `GET /api/v1/category` - Get all categories
+- `GET /api/v1/category/:id` - Get specific category
+- `PATCH /api/v1/category/:id` - Update category
+- `DELETE /api/v1/category/:id` - Delete category
 
-### Location (Joylashuvlar)
+### SubCategory Endpoints
 
-- `POST /api/v1/location` - Yangi joylashuv yaratish
-- `GET /api/v1/location` - Barcha joylashuvlarni olish
-- `GET /api/v1/location/:id` - Bitta joylashuvni olish
-- `PATCH /api/v1/location/:id` - Joylashuvni yangilash
-- `DELETE /api/v1/location/:id` - Joylashuvni o'chirish
+- `POST /api/v1/sub-category` - Create new sub-category
+- `GET /api/v1/sub-category` - Get all sub-categories
+- `GET /api/v1/sub-category/:id` - Get specific sub-category
+- `PATCH /api/v1/sub-category/:id` - Update sub-category
+- `DELETE /api/v1/sub-category/:id` - Delete sub-category
 
-### Info (Qo'shimcha ma'lumotlar)
+### Item Objects Endpoints
 
-- `POST /api/v1/info` - Yangi ma'lumot yaratish
-- `GET /api/v1/info` - Barcha ma'lumotlarni olish
-- `GET /api/v1/info/:id` - Bitta ma'lumotni olish
-- `PATCH /api/v1/info/:id` - Ma'lumotni yangilash
-- `DELETE /api/v1/info/:id` - Ma'lumotni o'chirish
+- `POST /api/v1/item-objects` - Create new item object
+- `GET /api/v1/item-objects` - Get all item objects
+- `GET /api/v1/item-objects/:id` - Get specific item object
+- `PATCH /api/v1/item-objects/:id` - Update item object
+- `DELETE /api/v1/item-objects/:id` - Delete item object
 
-## Ma'lumotlar Modeli
+### Location Endpoints
 
-### Building (Bino)
+- `POST /api/v1/location` - Create new location
+- `GET /api/v1/location` - Get all locations
+- `GET /api/v1/location/:id` - Get specific location
+- `PATCH /api/v1/location/:id` - Update location
+- `DELETE /api/v1/location/:id` - Delete location
 
-- `name` - Bino nomi (enum: Asosiy, Qushimcha, Arxiv)
-- `floors` - Qavatlari soni
-- `rooms` - Xonalari soni
-- `showcase` - Vitrina soni
-- `polkas` - Polkalar soni
+### Info Endpoints
 
-### Category (Kategoriya)
+- `POST /api/v1/info` - Create new info record
+- `GET /api/v1/info` - Get all info records
+- `GET /api/v1/info/:id` - Get specific info record
+- `PATCH /api/v1/info/:id` - Update info record
+- `DELETE /api/v1/info/:id` - Delete info record
 
-- `name` - Kategoriya nomi
-- `description` - Tavsifi
-- `statusType` - Holati (enum: Yaroqli, Yaroqsiz, Foydalanilmasin)
-- `categoryNumber` - Kategoriya raqami (I-XII)
-- `moved` - Ko'chirilganlar soni
-- `status` - Status (enum: Yangi, Ko'chirildi)
+### History Endpoints
 
-### SubCategory (Subkategoriya)
+- `POST /api/v1/history` - Create new history record
+- `GET /api/v1/history` - Get all history records
+- `GET /api/v1/history/:id` - Get specific history record
+- `PATCH /api/v1/history/:id` - Update history record
+- `DELETE /api/v1/history/:id` - Delete history record
 
-- `category_id` - Kategoriya identifikatori
-- `status` - Status (JSON ob'ekt sifatida)
+## Database Schema
 
-### ItemObject (Inventar ob'ekti)
+### Admin
 
-- `category_id` - Kategoriya identifikatori
-- `name` - Nomi
-- `period` - Davri
-- `price` - Narxi
-- `material` - Material
-- `status` - Holati (enum: Qoniqarli, Qoniqarsiz)
-- `fondType` - Fond turi (enum: Asosiy, Yordamchi, O'quv)
+- `id` - Auto-generated primary key
+- `email` - Unique email address
+- `name` - User's name
+- `password` - Hashed password
+- `role` - User role (Admin, SuperAdmin)
+- `createdAt` - Creation timestamp
+- `updatedAt` - Last update timestamp
 
-### Location (Joylashuv)
+### Building
 
-- `floor` - Qavat
-- `room` - Xona
-- `showcase` - Vitrina
-- `polka` - Polka
-- `building_id` - Bino identifikatori
-- `category_id` - Kategoriya identifikatori
+- `id` - Auto-generated primary key
+- `name` - Building name (enum: Main, Additional, Archive)
+- `floors` - Number of floors
+- `rooms` - Number of rooms
+- `showcases` - Number of showcases
+- `shelves` - Number of shelves
 
-### Info (Ma'lumot)
+### Category
 
-- `category_id` - Kategoriya identifikatori
-- `name` - Nomi
-- `description` - Tavsifi
-- `home` - Qo'shimcha ma'lumotlar (JSON massiv sifatida)
+- `id` - Auto-generated primary key
+- `name` - Category name
+- `description` - Description
+- `statusType` - Status type (enum: Suitable, Unsuitable, DoNotUse)
+- `categoryNumber` - Category number (I-XII)
+- `moved` - Number of moved items
+- `status` - Status (enum: New, Moved)
 
-## Testlash
+### SubCategory
 
-Testlarni ishga tushirish:
+- `id` - Auto-generated primary key
+- `categoryId` - Foreign key to Category
+- `status` - Status (JSON object)
+
+### ItemObject
+
+- `id` - Auto-generated primary key
+- `categoryId` - Foreign key to Category
+- `name` - Object name
+- `period` - Historical period
+- `price` - Estimated price
+- `material` - Material composition
+- `status` - Condition status (enum: Satisfactory, Unsatisfactory)
+- `fondType` - Fund type (enum: Main, Auxiliary, Educational)
+
+### Location
+
+- `id` - Auto-generated primary key
+- `floor` - Floor number
+- `room` - Room number
+- `showcase` - Showcase number
+- `shelf` - Shelf number
+- `buildingId` - Foreign key to Building
+- `categoryId` - Foreign key to Category
+
+### Info
+
+- `id` - Auto-generated primary key
+- `categoryId` - Foreign key to Category
+- `name` - Information name
+- `description` - Description
+- `details` - Additional details (JSON array)
+
+### History
+
+- `id` - Auto-generated primary key
+- `itemId` - Foreign key to ItemObject
+- `reason` - Reason for change (enum: ExhibitionChange, Renovation, Restoration, Safety, TourExhibition, Storage, Other)
+- `description` - Description of changes
+- `date` - Date of change
+
+## Example Data
+
+When the application starts for the first time, it automatically creates a super admin user based on the environment variables:
+
+```env
+SUPER_ADMIN_EMAIL=admin@gmail.com
+SUPER_ADMIN_PASS=admin
+SUPER_ADMIN_NAME=superadmin
+```
+
+### Sample API Requests
+
+#### 1. Login as Super Admin
+
+```bash
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@gmail.com",
+    "password": "admin"
+  }'
+```
+
+Response:
+
+```json
+{
+  "statusCode": 200,
+  "message": "success",
+  "data": {
+    "admin": {
+      "id": 1,
+      "email": "admin@gmail.com",
+      "name": "superadmin",
+      "role": "Superadmin",
+      "createdAt": "2025-12-16T10:30:00.000Z",
+      "updatedAt": "2025-12-16T10:30:00.000Z"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+#### 2. Create a New Building
+
+```bash
+curl -X POST http://localhost:3000/api/v1/building \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -d '{
+    "name": "Main",
+    "floors": 3,
+    "rooms": 15,
+    "showcases": 45,
+    "shelves": 120
+  }'
+```
+
+#### 3. Create a New Category
+
+```bash
+curl -X POST http://localhost:3000/api/v1/category \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -d '{
+    "name": "Archaeology",
+    "description": "Ancient artifacts and archaeological findings",
+    "statusType": "Suitable",
+    "categoryNumber": "I",
+    "moved": 0,
+    "status": "New"
+  }'
+```
+
+#### 4. Create a New Item Object
+
+```bash
+curl -X POST http://localhost:3000/api/v1/item-objects \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -d '{
+    "categoryId": 1,
+    "name": "Ancient Vase",
+    "period": "Bronze Age",
+    "price": 5000,
+    "material": "Clay",
+    "status": "Satisfactory",
+    "fondType": "Main"
+  }'
+```
+
+#### 5. Get All Items
+
+```bash
+curl -X GET http://localhost:3000/api/v1/item-objects \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+## Testing
+
+Run tests:
 
 ```bash
 npm run test
 ```
 
-## Linting va Formatlash
-
-Kodni tekshirish:
+Run tests in watch mode:
 
 ```bash
-npm run lint
+npm run test:watch
 ```
 
-Kodni formatlash:
+Run tests with coverage:
 
 ```bash
-npm run format
+npm run test:cov
 ```
 
-## Deploy qilish
+## Deployment
 
-Loyihani deploy qilish uchun quyidagi variantlardan birini tanlang:
+### Docker Deployment
 
-1. **Docker orqali deploy**:
+1. **Using Docker Compose** (Recommended):
 
 ```bash
 docker-compose up -d
 ```
 
-2. **Manual deploy**:
+This will start:
+
+- The NestJS application on port 3000
+- PostgreSQL database on port 5432
+- Redis cache on port 6379
+
+### Manual Deployment
+
+1. **Build the application**:
 
 ```bash
 npm run build
+```
+
+2. **Run in production mode**:
+
+```bash
 npm run start:prod
 ```
 
-## Muallif
+### Environment Configuration for Production
 
-Ushbu loyiha [Sizning Ismingiz] tomonidan yaratilgan.
+Ensure all environment variables are properly set in production:
 
-## Litsenziya
+```env
+# Application
+PORT=3000
+NODE_ENV=production
 
-Bu loyiha MIT litsenziyasi ostida tarqatiladi. Batafsil ma'lumot uchun [LICENSE](LICENSE) fayliga qarang.
+# Database
+DB_HOST=your_production_db_host
+DB_PORT=5432
+DB_USERNAME=your_production_db_user
+DB_PASSWORD=your_production_db_password
+DB_NAME=your_production_db_name
+
+# Security
+JWT_ACCESS_SECRET=your_production_secret
+JWT_REFRESH_SECRET=your_production_refresh_secret
+```
+
+## License
+
+This project is proprietary and confidential. Unauthorized copying, distribution, or modification is strictly prohibited.

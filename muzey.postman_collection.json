@@ -464,6 +464,57 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "history",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlN1cGVyYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTc2NTg3NDg3MiwiZXhwIjoxNzY1ODc4NDcyfQ.wKvJObqDvCLGmzPxxjGMd2efwdFAsqFyLTeFAFQVtGk"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Abdilaziz\",\r\n    \"data\":{\r\n        \"key\":\"location uzgartirildi\",\r\n        \"info\":{}\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/v1/history"
+					},
+					"response": []
+				},
+				{
+					"name": "all history",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlN1cGVyYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTc2NTg3NDg3MiwiZXhwIjoxNzY1ODc4NDcyfQ.wKvJObqDvCLGmzPxxjGMd2efwdFAsqFyLTeFAFQVtGk"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Abdilaziz\",\r\n    \"data\":{\r\n        \"key\":\"location uzgartirildi\",\r\n        \"info\":{}\r\n    }\r\n}"
+						},
+						"url": "localhost:3000/api/v1/history"
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
