@@ -2,8 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ItemObjectsService } from './item-objects.service';
 import { CreateItemObjectDto } from './dto/create-item-object.dto';
 import { UpdateItemObjectDto } from './dto/update-item-object.dto';
+import { Roles } from 'src/decorators/public.decorator';
+import { RoleUser } from 'src/Roles/roles';
 
 @Controller('item-objects')
+@Roles(RoleUser.ADMIN, RoleUser.SUPERADMIN)
 export class ItemObjectsController {
   constructor(private readonly itemObjectsService: ItemObjectsService) {}
 
@@ -23,7 +26,10 @@ export class ItemObjectsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateItemObjectDto: UpdateItemObjectDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateItemObjectDto: UpdateItemObjectDto,
+  ) {
     return this.itemObjectsService.update(+id, updateItemObjectDto);
   }
 

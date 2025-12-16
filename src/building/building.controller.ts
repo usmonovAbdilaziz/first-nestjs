@@ -1,9 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { BuildingService } from './building.service';
 import { CreateBuildingDto } from './dto/create-building.dto';
 import { UpdateBuildingDto } from './dto/update-building.dto';
+import { Roles } from 'src/decorators/public.decorator';
+import { RoleUser } from 'src/Roles/roles';
 
 @Controller('building')
+@Roles(RoleUser.ADMIN, RoleUser.SUPERADMIN)
 export class BuildingController {
   constructor(private readonly buildingService: BuildingService) {}
 

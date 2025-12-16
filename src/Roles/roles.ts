@@ -53,3 +53,8 @@ export enum Reason {
   STORAGE = 'Saqlovga joylash',
   OTHER = 'Boshqa',
 }
+export enum RoleUser {
+  ADMIN = 'Admin',
+  USER = 'User',
+  SUPERADMIN = 'Superadmin',
+}
