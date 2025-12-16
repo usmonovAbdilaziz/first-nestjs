@@ -14,7 +14,6 @@ export class HistoryService {
 
   async create(createHistoryDto: CreateHistoryDto) {
     try {
-      console.log('ishladi');
       
       const newHistory = this.historyRepository.create(createHistoryDto);
       await this.historyRepository.save(newHistory);
