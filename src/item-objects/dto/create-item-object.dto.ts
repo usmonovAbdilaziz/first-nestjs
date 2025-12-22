@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { FondType, ItemStatus } from "../../Roles/roles";
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { CategoryStatus, FondType, ItemStatus } from "../../Roles/roles";
 
 export class CreateItemObjectDto {
   @IsNumber()
@@ -14,9 +14,17 @@ export class CreateItemObjectDto {
   @IsNotEmpty()
   period: number;
 
+  @IsNumber()
+  @IsOptional()
+  moved?: number;
+
   @IsString()
   @IsNotEmpty()
   price: string;
+
+  @IsEnum(CategoryStatus)
+  @IsOptional()
+  statusCategory?: CategoryStatus;
 
   @IsString()
   @IsNotEmpty()
@@ -32,9 +40,13 @@ export class CreateItemObjectDto {
 
   @IsNumber()
   @IsNotEmpty()
-  sub_category_id:number
+  sub_category_id: number;
 
   @IsString()
   @IsNotEmpty()
-  subCategory:string
+  subCategory: string;
+
+  @IsString()
+  @IsNotEmpty()
+  description: string;
 }

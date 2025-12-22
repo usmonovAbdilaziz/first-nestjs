@@ -30,6 +30,7 @@ export class LocationController {
     @Param('id') id: string,
     @Body() updateLocationDto: UpdateLocationDto,
   ) {
+    
     return this.locationService.update(+id, updateLocationDto);
   }
 

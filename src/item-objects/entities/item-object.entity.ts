@@ -1,6 +1,6 @@
 import { SubCategory } from 'src/sub-category/entities/sub-category.entity';
 import { Category } from '../../category/entities/category.entity';
-import { FondType, ItemStatus } from '../../Roles/roles';
+import { CategoryStatus, FondType, ItemStatus } from '../../Roles/roles';
 import {
   Column,
   CreateDateColumn,
@@ -26,11 +26,20 @@ export class ItemObject {
   @Column({ type: 'integer' })
   period: number;
 
+  @Column({ type: 'integer', nullable: true, default: 0 })
+  moved: number;
+
   @Column({ type: 'varchar' })
   price: string;
 
   @Column({ type: 'varchar' })
   material: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  description: string;
+
+  @Column({ type: 'enum', enum: CategoryStatus, default: CategoryStatus.New })
+  statusCategory: CategoryStatus;
 
   @Column({ type: 'enum', enum: ItemStatus })
   status: ItemStatus;
@@ -46,7 +55,7 @@ export class ItemObject {
   @JoinColumn({ name: 'category_id' })
   category: Category;
 
-  @Column({ type: 'varchar',nullable:true })
+  @Column({ type: 'varchar', nullable: true })
   subCategory: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })

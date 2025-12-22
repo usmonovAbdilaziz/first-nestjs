@@ -1,6 +1,24 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { CategoryNumber, CategoryStatus, CategoryType, StatusType } from "../../Roles/roles";
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import {
+  CategoryNumber,
+  CategoryStatus,
+  CategoryType,
+  StatusType,
+} from '../../Roles/roles';
 
+export interface IHistory {
+  oldData: object[];
+  newData: object;
+  timestamp: Date;
+}
 export class CreateCategoryDto {
   @IsEnum(CategoryType)
   @IsNotEmpty()
@@ -10,13 +28,9 @@ export class CreateCategoryDto {
   @IsNotEmpty()
   categoryNumber: CategoryNumber;
 
-  @IsNumber()
+  @IsArray()
   @IsOptional()
-  moved?: number;
-
-  @IsEnum(StatusType)
-  @IsNotEmpty()
-  statusType: StatusType;
+  history?: IHistory[];
 
   @IsEnum(CategoryStatus)
   @IsOptional()

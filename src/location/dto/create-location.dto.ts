@@ -12,6 +12,10 @@ export class CreateLocationDto {
 
   @IsNumber()
   @IsNotEmpty()
+  itemObject_id?: number;
+
+  @IsNumber()
+  @IsNotEmpty()
   floor: number;
 
   @IsNumber()
@@ -25,7 +29,7 @@ export class CreateLocationDto {
   @IsNumber()
   @IsNotEmpty()
   polka: number;
-//for info
+  //for info
   @IsString()
   @IsOptional()
   infoName?: string;
@@ -36,5 +40,5 @@ export class CreateLocationDto {
 
   @IsEnum(Reason)
   @IsOptional()
-  reasonForTransfer?:Reason
+  reasonForTransfer?: Reason;
 }

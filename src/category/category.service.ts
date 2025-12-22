@@ -11,7 +11,6 @@ import { handleError, succesMessage } from '../utils/response';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
-import { InfoService } from '../info/info.service';
 
 @Injectable()
 export class CategoryService {
@@ -36,10 +35,13 @@ export class CategoryService {
     }
   }
 
+  /**
+   * Find all categories with minimal relations for clean response
+   */
   async findAll() {
     try {
       const categories = await this.categoryRepo.find({
-        relations: ['objs', 'subcategories', 'locations'],
+        relations: ['objs', 'subcategories'],
         order: { name: 'ASC' },
       });
       return succesMessage(categories);
@@ -48,27 +50,59 @@ export class CategoryService {
     }
   }
 
+  /**
+   * Find a category by ID with minimal relations for clean response
+   */
   async findOne(id: number) {
     try {
-      const exists = await this.categoryRepo.findOne({
+      const category = await this.categoryRepo.findOne({
         where: { id },
-        relations: ['objs', 'subcategories', 'locations'], order: { name: 'ASC' }
+        relations: ['objs', 'subcategories'],
       });
-      if (!exists) {
+      if (!category) {
         throw new NotFoundException('Category not found');
       }
-      return succesMessage(exists);
+      return succesMessage(category);
     } catch (error) {
       handleError(error);
     }
   }
 
+  /**
+   * Update a category by ID
+   * Handles history updates properly while avoiding type conflicts
+   */
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     try {
-     await this.categoryRepo.update(id,updateCategoryDto)
-     const category = await this.findOne(id)
+      // Get the current category to preserve existing history
+      const existingCategory = await this.categoryRepo.findOne({
+        where: { id },
+      });
+      if (!existingCategory) {
+        throw new NotFoundException('Category not found');
+      }
 
-      return succesMessage(category!.data);
+      // Separate history from other update data
+      const { history, ...otherUpdateData } = updateCategoryDto;
+
+      // If history is provided, merge it with existing history
+      let updatedHistory = existingCategory.history || [];
+      if (history && history.length > 0) {
+        updatedHistory = [...updatedHistory, ...history];
+      }
+
+      // Prepare update data with proper history
+      const updateData = {
+        ...otherUpdateData,
+        history: updatedHistory,
+      };
+
+      // Perform the update
+      await this.categoryRepo.update(id, updateData);
+
+      // Return the updated category
+      const updatedCategory: any = await this.findOne(id);
+      return succesMessage(updatedCategory?.data);
     } catch (error) {
       handleError(error);
     }

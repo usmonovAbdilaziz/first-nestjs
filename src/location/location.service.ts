@@ -15,6 +15,7 @@ import { BuildingService } from 'src/building/building.service';
 import { handleError, succesMessage } from 'src/utils/response';
 import { CategoryStatus } from 'src/Roles/roles';
 import { InfoService } from 'src/info/info.service';
+import { ItemObjectsService } from 'src/item-objects/item-objects.service';
 
 @Injectable()
 export class LocationService {
@@ -22,6 +23,7 @@ export class LocationService {
     @InjectRepository(Location)
     private locationRepository: Repository<Location>,
     private readonly buildingService: BuildingService,
+    private readonly itemsService: ItemObjectsService,
     private readonly categoryService: CategoryService,
     @Inject(forwardRef(() => InfoService)) private infoservice: InfoService,
   ) {}
@@ -109,7 +111,7 @@ export class LocationService {
     }
   }
 
-  async update(id: number, updateLocationDto: UpdateLocationDto) {
+  async update(id: number, dto: UpdateLocationDto) {
     try {
       const {
         category_id,
@@ -121,102 +123,185 @@ export class LocationService {
         infoName,
         description,
         reasonForTransfer,
-      } = updateLocationDto;
+        itemObject_id,
+      } = dto;
+
+      // ✅ Required fields check
       if (!infoName || !description || !reasonForTransfer) {
         throw new ConflictException(
-          'infoName, description va reasonForTransfer hammasi bulishi shart',
+          'infoName, description va reasonForTransfer hammasi bo‘lishi shart',
         );
       }
-      if (category_id) {
-        const exists = await this.categoryService.findOne(category_id);
-        if (!exists) throw new NotFoundException('Category not found');
-      }
-      if (building_id) {
-        const buildingExists = await this.buildingService.findOne(building_id);
-        if (!buildingExists) {
-          throw new NotFoundException('Building not found');
-        }
+      if (!building_id || !category_id || !itemObject_id) {
+        throw new NotFoundException(
+          'building_id, category_id yoki itemObject_id topilmadi',
+        );
       }
 
-      const existsBuild: any = await this.locationRepository.findOne({
-        where: { id },
-      });
+      // ✅ Fetch all necessary entities
+      const categoryResult = await this.categoryService.findOne(category_id);
+      const buildingResult = await this.buildingService.findOne(building_id);
+      const itemResult = await this.itemsService.findOne(itemObject_id);
+      const location = await this.locationRepository.findOne({ where: { id } });
+
+      // Extract data from the wrapped responses
+      const category = categoryResult?.data as any;
+      const building = buildingResult?.data as any;
+      const item = itemResult?.data as any;
+
+      if (!category) throw new NotFoundException('Category not found');
+      if (!building) throw new NotFoundException('Building not found');
+      if (!item) throw new NotFoundException('Item not found');
+      if (!location) throw new NotFoundException('Location not found');
+
+      // ✅ Check if location data is unchanged
       if (
-        floor === existsBuild.floor &&
-        room === existsBuild.room &&
-        showcase === existsBuild.showcase &&
-        polka === existsBuild.polka
+        location.floor === floor &&
+        location.room === room &&
+        location.showcase === showcase &&
+        location.polka === polka
       ) {
         throw new ConflictException('Location already exists');
       }
-      //for info create
-      const { data }: any = await this.categoryService.findOne(
-        existsBuild.category_id,
-      );
-      const building = await this.buildingService.findOne(
-        existsBuild.building_id,
-      );
 
-      const newMove = data.moved + 1;
-      const newStatus = CategoryStatus.Moved;
+      // ✅ Prepare old data for history/info
+      // Store only essential data to prevent recursive nesting
+      const oldCategory = {
+        id: category.id,
+        name: category.name,
+        statusType: category.statusType,
+        categoryNumber: category.categoryNumber,
+      };
+
+      const oldLocation = {
+        id: location.id,
+        floor: location.floor,
+        room: location.room,
+        showcase: location.showcase,
+        polka: location.polka,
+      };
+
+      const oldBuilding = {
+        id: building.id,
+        name: building.name,
+      };
+
+      // ✅ Create info record
+      // Store simplified data to prevent recursive nesting
       const info = await this.infoservice.create({
-        category_id: existsBuild.category_id,
+        category_id,
         reasonForTransfer,
         name: infoName,
         description,
-        home: [existsBuild.data],
+        home: [
+          {
+            data: {
+              type: 'category',
+              id: oldCategory.id,
+              name: oldCategory.name,
+            },
+          },
+          {
+            data: {
+              type: 'location',
+              id: oldLocation.id,
+              floor: oldLocation.floor,
+              room: oldLocation.room,
+              showcase: oldLocation.showcase,
+              polka: oldLocation.polka,
+            },
+          },
+          {
+            data: {
+              type: 'building',
+              id: oldBuilding.id,
+              name: oldBuilding.name,
+            },
+          },
+        ],
       });
 
-      const historyItem = {
-        moved: newMove,
-        status: newStatus,
-        updatedAt: data.updatedAt,
-        history: [building!.data],
+      // ✅ Update category history
+      // First, get the current category to retrieve existing history
+      const currentCategoryResult =
+        await this.categoryService.findOne(category_id);
+      if (!currentCategoryResult) {
+        throw new NotFoundException('Category not found');
+      }
+      const currentCategory = currentCategoryResult.data;
+      const existingHistory = (currentCategory as any).history || [];
+
+      // Create new history entry
+      // Store simplified data to prevent recursive nesting
+      const newHistoryEntry = {
+        oldData: {
+          category: {
+            id: oldCategory.id,
+            name: oldCategory.name,
+          },
+          location: {
+            id: oldLocation.id,
+            floor: oldLocation.floor,
+            room: oldLocation.room,
+            showcase: oldLocation.showcase,
+            polka: oldLocation.polka,
+          },
+          building: {
+            id: oldBuilding.id,
+            name: oldBuilding.name,
+          },
+        },
+        newData: {
+          floor: dto.floor,
+          room: dto.room,
+          showcase: dto.showcase,
+          polka: dto.polka,
+        },
+        timestamp: new Date(),
       };
-      await this.categoryService.update(existsBuild.category_id, historyItem);
+      const updateItems = { ...existingHistory, newHistoryEntry };
+      // Update category with new history
+      await this.categoryService.update(category_id, {
+        history: updateItems,
+      } as any);
+      // ✅ Update item status
+      await this.itemsService.update(itemObject_id, {
+        statusCategory: CategoryStatus.Moved,
+        moved: (item.moved || 0) + 1,
+      });
 
-      // First check if location exists
-      await this.findOne(id);
-
-      // Transform DTO for update to match entity structure if needed
+      // ✅ Prepare data for location update
       const updateData: any = {
-        floor: updateLocationDto.floor,
-        room: updateLocationDto.room,
-        showcase: updateLocationDto.showcase,
-        polka: updateLocationDto.polka,
-        building_id: updateLocationDto.building_id,
-        category_id: updateLocationDto.category_id,
+        floor,
+        room,
+        showcase,
+        polka,
+        category: { id: category_id },
+        building: { id: building_id },
       };
 
-      // Handle category_id -> category transformation
-      if (updateData.category_id !== undefined) {
-        updateData.category = { id: updateData.category_id };
-        delete updateData.category_id;
-      }
-
-      // Handle building_id -> building transformation
-      if (updateData.building_id !== undefined) {
-        updateData.building = { id: updateData.building_id };
-        delete updateData.building_id;
-      }
-
-      // Update the location
+      // ✅ Update location
       await this.locationRepository.update(id, updateData);
 
-      // Return updated location
       const updatedLocation = await this.locationRepository.findOne({
         where: { id },
         relations: ['category', 'building'],
       });
 
-      // Check if update was successful
-      if (!updatedLocation) {
+      if (!updatedLocation)
         throw new NotFoundException('Location not found after update');
-      }
 
-      return succesMessage({ updatedLocation, info: info!.data });
+      return succesMessage({ data: updatedLocation, info: info?.data });
     } catch (error) {
       handleError(error);
+    }
+
+    // ✅ Helper function for picking fields
+    function pick(obj: any, keys: string[]) {
+      return keys.reduce((acc, key) => {
+        if (obj && obj[key] !== undefined) acc[key] = obj[key];
+        return acc;
+      }, {} as any);
     }
   }
 

@@ -22,20 +22,11 @@ export class Category {
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar' })
-  description: string;
-
   @Column({ type: 'enum', enum: StatusType })
   statusType: StatusType;
 
   @Column({ type: 'enum', enum: CategoryNumber })
   categoryNumber: CategoryNumber;
-
-  @Column({ type: 'integer', default: 0 })
-  moved: number;
-
-  @Column({ type: 'enum', enum: CategoryStatus, default: CategoryStatus.New })
-  status: CategoryStatus;
 
   @OneToMany(() => Location, (cate) => cate.category)
   locations: Location[];
