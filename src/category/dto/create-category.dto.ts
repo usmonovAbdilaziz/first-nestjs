@@ -11,7 +11,6 @@ import {
   CategoryNumber,
   CategoryStatus,
   CategoryType,
-  StatusType,
 } from '../../Roles/roles';
 
 export interface IHistory {

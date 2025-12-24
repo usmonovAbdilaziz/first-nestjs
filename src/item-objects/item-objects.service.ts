@@ -64,7 +64,7 @@ export class ItemObjectsService {
 
   async update(id: number, updateItemObjectDto: UpdateItemObjectDto) {
     try {
-      await this.itemObjRepo.update({ category_id: id }, updateItemObjectDto);
+      await this.itemObjRepo.update( id , updateItemObjectDto);
       const newItem = await this.findOne(id);
       return succesMessage(newItem!.data);
     } catch (error) {
